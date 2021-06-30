@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
+const customers = [];
 
 /* 
     cpf - string
@@ -14,6 +15,9 @@ const app = express();
 app.post("/account", (request, response) => {
     const { nome, cpf } = request.body;
 
+    const id = uuidv4();
+
+    customers.push();
 })
 
 app.listen(3333);
