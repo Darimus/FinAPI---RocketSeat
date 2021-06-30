@@ -3,6 +3,8 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
+app.use(express.json());
+
 const customers = [];
 
 /* 
@@ -13,11 +15,18 @@ const customers = [];
 */
 
 app.post("/account", (request, response) => {
-    const { nome, cpf } = request.body;
+    const { name, cpf } = request.body;
 
     const id = uuidv4();
 
-    customers.push();
+    customers.push({ 
+        cpf,
+        name,
+        id,
+        statemante: []
+    });
+
+    return response.status(201).send();
 })
 
 app.listen(3333);
