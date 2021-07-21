@@ -18,6 +18,8 @@ function verifyIfExistsAccountCPF(resquest, response, next) {
         return response.status(400).json({error: "Customer not found"});
     }
 
+    request.customer = customers;
+
     return next ();
 }
 
