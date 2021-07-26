@@ -23,6 +23,7 @@ function verifyIfExistsAccountCPF(request, response, next) {
     return next ();
 }
 
+// Faz o balanço da conta
 function getBalance (statement) {
     const balance = statement.reduce((acc, operation) => {
         if(operation.type === 'credit') {
@@ -35,6 +36,7 @@ function getBalance (statement) {
     return balance;
 }
 
+// Criação da conta
 app.post("/account", (request, response) => {
     const { name, cpf } = request.body;
 
@@ -54,12 +56,14 @@ app.post("/account", (request, response) => {
     return response.status(201).send();
 })
 
+// O estado da conta
 app.get("/statement", verifyIfExistsAccountCPF, (request, response) => {
     const { customer } = request;
 
     return response.json(customer.statemant);
 })
 
+// Deposito de dinheiro
 app.post("/deposit", verifyIfExistsAccountCPF, (request, response) => {
     const { description, amount } = request.body;
 
@@ -77,6 +81,7 @@ app.post("/deposit", verifyIfExistsAccountCPF, (request, response) => {
     return response.status(201).send();
 });
 
+// Saque do dinheiro
 app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     const { amount } = request.body;
     const { customer } = request;
@@ -96,6 +101,18 @@ app.post("/withdraw", verifyIfExistsAccountCPF, (request, response) => {
     customer.statemant.push(statementOperation);
 
     return response.status(201).send()
+})
+
+// Extrato por data
+app.get("/statement/date", verifyIfExistsAccountCPF, (request, response) => {
+    const { customer } = request;
+    const { date } = request.query;
+
+    const formatDate = new Date(date + ' 00:00');
+
+    const statement = customer.statemant.filter((statement) => statement.created_at.toDateString() === new Date(formatDate).toDateString());
+
+    return response.json(statement);
 })
 
 app.listen(3333);
